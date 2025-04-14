@@ -3,3 +3,4 @@ langchain-google-genai==2.1.2
 langchain_community==0.3.21 
 tavily-python==0.5.4
 streamlit==1.44.1
+dotenv==0.9.9
