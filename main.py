@@ -3,7 +3,7 @@ import dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools import TavilySearchResults
 from langchain.agents import create_react_agent, AgentType, AgentExecutor
-from langchain_core.prompts import PromptTemplate
+from langchain.prompts import PromptTemplate
 import streamlit as st
 
 # Load environment variables from .env file
@@ -31,11 +31,32 @@ tools = [search_tool]
 # Define the prompt template
 # This is a simple prompt template that can be customized
 # to include more context or instructions for the assistant.
-prompt = PromptTemplate(
-    input_variables=["input"],
-    template="You are a helpful assistant. Answer the question: {input}",
-)
 
+react_prompt_template = """
+Answer the following questions as best you can. You have access to the following tools:
+
+{tools}
+
+Use the following format:
+
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action: the action to take, should be one of [{tool_names}] # <-- Make sure this is present
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Thought: I now know the final answer
+Final Answer: the final answer to the original input question
+
+Begin!
+
+Question: {input}
+Thought:{agent_scratchpad} # <-- Make sure this is present
+"""
+prompt = PromptTemplate(
+    input_variables=["input", "agent_scratchpad", "tools", "tool_names"],
+    template=react_prompt_template
+)
 # Initialize the agent with the tools and prompt
 agent = create_react_agent(
     llm=llm,
