@@ -2,9 +2,7 @@ import os
 import dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools import TavilySearchResults
-from langchain_community.utilities.openweathermap import OpenWeatherMapAPIWrapper
-from langchain_community.tools import OpenWeatherMapQueryRun
-from langchain.agents import initialize_agent, AgentType
+from langchain.agents import create_react_agent, AgentType, AgentExecutor
 from langchain_core.prompts import PromptTemplate
 import streamlit as st
 
@@ -15,7 +13,6 @@ dotenv.load_dotenv(".env")
 
 google_api_key = os.getenv("GOOGLE_API_KEY")
 tavily_api_key = os.getenv("TAVILY_API_KEY")
-owm_api_key = os.getenv("OWM_API_KEY")
 
 # Initialize the LLM
 llm = ChatGoogleGenerativeAI(
@@ -29,12 +26,7 @@ search_tool = TavilySearchResults(
     num_results=5,
 )
 
-weather_wrapper = OpenWeatherMapAPIWrapper(openweathermap_api_key=owm_api_key)
-weather_tool = OpenWeatherMapQueryRun(
-    api_wrapper=weather_wrapper,
-)
-
-tools = [search_tool, weather_tool]
+tools = [search_tool]
 
 # Define the prompt template
 # This is a simple prompt template that can be customized
@@ -45,15 +37,19 @@ prompt = PromptTemplate(
 )
 
 # Initialize the agent with the tools and prompt
-agent = initialize_agent(
-    tools=tools,
-    prompt=prompt,
+agent = create_react_agent(
     llm=llm,
-    agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-    verbose=True,
-    max_iterations=2,
+    tools=tools,
+    prompt=prompt
 )
 
+agent_executor = AgentExecutor.from_agent_and_tools(
+    agent=agent,
+    tools=tools,
+    verbose=True,
+    max_iterations=2,
+    handle_parsing_errors=True,
+)
 # This function sets up the Streamlit UI for the assistant
 def ui():
     st.set_page_config(page_title="coolGemini", page_icon=":robot_face:")
@@ -64,7 +60,7 @@ def ui():
     if st.button("Submit"):
         if user_input:
             with st.spinner("Thinking..."):
-                response = agent.run(user_input)
+                response = agent_executor.invoke({"input": user_input})
                 st.write(f"Assistant: {response}")
         else:
             st.warning("Please enter a question.")
