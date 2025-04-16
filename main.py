@@ -73,7 +73,7 @@ agent_executor = AgentExecutor.from_agent_and_tools(
 )
 # This function sets up the Streamlit UI for the assistant
 def ui():
-    st.set_page_config(page_title="coolGemini", page_icon=":robot_face:")
+    st.set_page_config(page_title="coolGemini", page_icon="favicon.png")
 
     st.title("Google Gemini Assistant")
     st.write("Ask me anything!")
@@ -81,19 +81,24 @@ def ui():
     if st.button("Submit"):
         if user_input:
             with st.spinner("Thinking..."):
-                response = agent_executor.invoke({"input": user_input})
-                st.write(f"Assistant: {response}")
+                try:
+                    response = agent_executor.invoke({"input": user_input})
+                    # --- DEBUGGING ---
+                    # Optional: Print to console to see the full structure if needed
+                    # print("Agent Response Dictionary:", response)
+                    # --- END DEBUGGING ---
+
+                    # Access the 'output' key for the final answer
+                    final_answer = response.get('output', 'Sorry, I could not find an answer.') # Use .get for safety
+
+                    st.write("Assistant:") # Write label first
+                    st.markdown(final_answer) # Use markdown for potentially better formatting
+
+                except Exception as e:
+                    st.error(f"An error occurred: {e}") # Display errors in the UI
         else:
             st.warning("Please enter a question.")
 
-# Command-line interface
-def cli():
-    while True:
-        user_input = input("Ask me anything: ")
-        if user_input.lower() in ["exit", "quit"]:
-            break
-        response = agent.run(user_input)
-        print(f"Assistant: {response}")
-
+# Run the Streamlit app
 if __name__ == "__main__":
     ui()
