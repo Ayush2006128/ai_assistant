@@ -5,17 +5,23 @@ from langchain_community.tools import TavilySearchResults
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
+import logging
 
 dotenv.load_dotenv(".env")
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 google_api_key = os.getenv("GOOGLE_API_KEY")
 tavily_api_key = os.getenv("TAVILY_API_KEY")
+model_name = os.getenv("MODEL_NAME", "gemini-2.0-flash")  # Default model
+temperature = float(os.getenv("TEMPERATURE", 0.8))  # Default temperature
 
 # Initialize the LLM
 llm = ChatGoogleGenerativeAI(
     google_api_key=google_api_key,
-    model="gemini-2.0-flash",
-    temperature=0.8,
+    model=model_name,
+    temperature=temperature,
 )
 # Define the tools
 search_tool = TavilySearchResults(
@@ -23,14 +29,10 @@ search_tool = TavilySearchResults(
     num_results=5,
 )
 
+
 tools = [search_tool]
 
-# Define the prompt template
-# This is a simple prompt template that can be customized
-# to include more context or instructions for the assistant.
-
-react_prompt_template = """
-Answer the following questions as best you can. You have access to the following tools:
+react_prompt_template = """Answer the following questions as best you can. You have access to the following tools:
 
 {tools}
 
@@ -50,6 +52,7 @@ Begin!
 Question: {input}
 Thought:{agent_scratchpad} # <-- Make sure this is present
 """
+
 prompt = PromptTemplate(
     input_variables=["input", "agent_scratchpad", "tools", "tool_names"],
     template=react_prompt_template
@@ -68,6 +71,6 @@ agent_executor = AgentExecutor.from_agent_and_tools(
     tools=tools,
     verbose=True,
     memory=memory,
-    max_iterations=2,
+    max_iterations=3,
     handle_parsing_errors=True,
 )
