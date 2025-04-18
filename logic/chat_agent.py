@@ -4,6 +4,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools import TavilySearchResults
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
+from langchain.memory import ConversationBufferMemory
 
 dotenv.load_dotenv(".env")
 
@@ -60,10 +61,13 @@ agent = create_react_agent(
     prompt=prompt
 )
 
+memory = ConversationBufferMemory(memory_key="chat_history")
+
 agent_executor = AgentExecutor.from_agent_and_tools(
     agent=agent,
     tools=tools,
     verbose=True,
+    memory=memory,
     max_iterations=2,
     handle_parsing_errors=True,
 )
