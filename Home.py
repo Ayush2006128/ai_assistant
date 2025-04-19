@@ -7,7 +7,7 @@ st.set_page_config(
     page_icon="favicon.png",
     layout="wide",
 )
-st.title("Google Gemini Assistant")
+st.title("🤖 AI Assistant")
 
 # Initialize chat history
 if "messages" not in st.session_state:

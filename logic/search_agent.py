@@ -23,9 +23,9 @@ def search(query):
         results_dict = client.search(
             query,
             search_depth="advanced", # Often gives better structured results
-            num_results=5,
+            num_results=10,
             include_answer=True,
-            include_images=True
+            include_images=True,
         )
 
         # --- Optional: Print the raw structure for debugging ---
