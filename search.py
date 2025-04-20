@@ -19,11 +19,15 @@ def display_images(images):
     if images:
         st.subheader("Images")
         # Use columns for better layout, adjust number as needed
-        cols = st.columns(3)
+        cols = st.columns(3)  # Create 3 columns for images
         for i, image_url in enumerate(images):
             with cols[i % 3]:
                 # Add error handling for potentially broken image links
-                st.image(image_url, use_column_width=True)
+                with st.container(height=200):  # Set a fixed height for the image container
+                    try:
+                        st.image(image_url, use_container_width=True)
+                    except Exception as e:
+                        st.warning(f"Could not load image. Error: {e}")
         st.write("---")
     else:
         st.info("No images found.")
@@ -37,16 +41,24 @@ def display_videos(videos):
             link = video.get('video_link', '#')
             thumbnail = video.get('thumbnail_url')
 
-            st.write(f"**[{title}]({link})**")
-            # Add error handling for image loading if URLs can be invalid or missing
-            if thumbnail:
-                try:
-                    st.image(thumbnail)
-                except Exception as e:
-                    st.warning(f"Could not load thumbnail for '{title}'. Error: {e}")
-            else:
-                st.caption("No thumbnail available.")
-            st.write("---")
+            # Create a container for each video
+            with st.container():
+                cols = st.columns([0.3, 0.7])  # Adjust column widths as needed
+
+                # Display thumbnail in the first column
+                with cols[0]:
+                    if thumbnail:
+                        try:
+                            st.image(thumbnail, use_container_width=True)
+                        except Exception as e:
+                            st.warning(f"Could not load thumbnail for '{title}'. Error: {e}")
+                    else:
+                        st.caption("No thumbnail available.")
+
+                # Display title in the second column
+                with cols[1]:
+                    st.link_button(title, link, help="Opens video in Youtube.", type="tertiary") # Make title clickable
+                st.write("---")
     else:
         st.info("No videos found.")
 
@@ -65,13 +77,6 @@ def display_web_results(results):
         st.info("No web results found.")
 
 # --- Streamlit App Layout ---
-
-# Set the page configuration
-st.set_page_config(
-    page_title="Search",
-    page_icon=":mag:",
-    layout="wide" # Use wide layout for better display
-)
 
 st.title("🔍 Search Engine")
 
@@ -92,8 +97,10 @@ if query:
             # Perform all searches once using the actual imported functions
             # Ensure your 'search' function returns a dict like the mock
             # Ensure your 'search_youtube_videos' returns a list of dicts like the mock
-            web_search_results = search(query) # Fetches web results and images
+            web_search_results, response_time = search(query) # Fetches web results and images
             video_search_results = search_youtube_videos(query)
+            if response_time:
+                st.success(f"Search completed in {response_time:.2f} seconds.")
         except Exception as e:
             # Catch potential errors during API calls (network issues, API errors, etc.)
             search_error = f"An error occurred during search: {e}"
