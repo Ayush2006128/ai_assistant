@@ -27,14 +27,9 @@ def search(query):
             include_images=True,
         )
 
-        # --- Optional: Print the raw structure for debugging ---
-        # print("--- Full Tavily Response ---")
-        # print(json.dumps(results_dict, indent=2))
-        # print("----------------------------")
-        # --- End Debugging ---
-
         # Extract the LIST of individual search results using .get() for safety
         individual_results_list = results_dict.get("results", [])
+        response_time = results_dict.get("response_time", "N/A") # Optional: Get response time
 
         # Process each individual result item from the list
         extracted_results = []
@@ -58,7 +53,7 @@ def search(query):
             "results": extracted_results # The list of processed individual results
         }
 
-        return final_output # Return the structured dictionary
+        return final_output, response_time # Return the structured dictionary with response time
 
     except Exception as e:
         print(f"An error occurred during Tavily search: {e}")
@@ -70,11 +65,13 @@ def search(query):
 # Example usage
 if __name__ == "__main__":
     query = "What is the capital of India?"
-    search_output = search(query) # Renamed variable for clarity
+    search_output, response_time = search(query) # Renamed variable for clarity
 
     if search_output:
         print(f"Query: {search_output.get('query', 'N/A')}")
         print(f"Overall Answer: {search_output.get('answer', 'N/A')}") # Print the main answer
+        print("-" * 20)
+        print(f"Response Time: {response_time} seconds")
         print("-" * 20)
 
         # Check if the 'results' list exists and is not empty

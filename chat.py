@@ -1,12 +1,7 @@
 import streamlit as st
 from logic.chat_agent import agent_executor
 
-# Set the page configuration
-st.set_page_config(
-    page_title="coolGemini",
-    page_icon="favicon.png",
-    layout="wide",
-)
+
 st.title("🤖 AI Assistant")
 
 # Initialize chat history
