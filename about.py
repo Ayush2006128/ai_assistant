@@ -1,0 +1,18 @@
+import streamlit as st
+
+st.title("About coolGemini")
+st.write("This application is developed by Ayush Muley.")
+st.write("Copyright (c) 2025. All rights reserved.")
+st.write("This application uses the following technologies:")
+st.write("- Langchain")
+st.write("- Google Gemini API")
+st.write("- Tavily API")
+st.write("- Streamlit")
+st.write("- Youtube Data API")
+st.write("--------------------")
+st.write("This application is designed to provide a chat interface with Google Gemini and search capabilities using Tavily.")
+st.write("The application is built using Streamlit, a Python library for creating web applications.")
+st.write("This application is for educational purposes only.")
+st.write("--------------------")
+st.caption("This application is not affiliated with Google or any of its products.")
+st.caption("This application is licensed under the BSD 3-Clause License.")
