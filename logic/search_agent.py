@@ -1,6 +1,5 @@
 import os
 import dotenv
-import json
 from tavily import TavilyClient
 
 # It's good practice to handle potential missing environment variables
