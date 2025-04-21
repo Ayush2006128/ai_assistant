@@ -14,5 +14,5 @@ st.write("This application is designed to provide a chat interface with Google G
 st.write("The application is built using Streamlit, a Python library for creating web applications.")
 st.write("This application is for educational purposes only.")
 st.write("--------------------")
-st.caption("This application is not affiliated with Google or any of its products.")
+st.caption("This application is not affiliated with Google or Tavily for any of their products.")
 st.caption("This application is licensed under the BSD 3-Clause License.")
