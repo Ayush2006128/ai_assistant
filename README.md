@@ -20,7 +20,7 @@ coolGemini is an AI-powered assistant application built using Streamlit. It prov
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Ayush2006128/ai_assistant
    cd ai_assistant
    ```
 
