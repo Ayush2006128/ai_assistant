@@ -24,4 +24,4 @@ We prioritize the security of your data. However, since the application relies o
 We may update this Privacy Policy from time to time. Any changes will be reflected in this document, and we encourage you to review it periodically.
 
 ## Contact Us
-If you have any questions or concerns about this Privacy Policy, please contact us at: [Your Contact Information].
+If you have any questions or concerns about this Privacy Policy, please contact us at: ayush.muley2006@gmail.com.

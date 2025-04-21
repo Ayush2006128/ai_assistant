@@ -27,4 +27,4 @@ All intellectual property rights in the App and its content (excluding third-par
 The developers reserve the right to update or modify these Terms of Use at any time. Continued use of the App after changes constitutes acceptance of the new terms.
 
 ## Contact
-For questions about these Terms of Use, please contact the developer at: [Your Contact Information].
+For questions about these Terms of Use, please contact the developer at: ayush.muley2006@gmail.com.
