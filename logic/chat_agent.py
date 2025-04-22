@@ -66,7 +66,7 @@ agent = create_react_agent(
 
 memory = ConversationBufferMemory(memory_key="chat_history")
 
-agent_executor = AgentExecutor.from_agent_and_tools(
+agent_executor = AgentExecutor(
     agent=agent,
     tools=tools,
     verbose=True,
@@ -74,3 +74,10 @@ agent_executor = AgentExecutor.from_agent_and_tools(
     max_iterations=3,
     handle_parsing_errors=True,
 )
+
+if __name__ == "__main__":
+    # Example usage
+    query = "What is the capital of France?"
+    logging.info(f"Query: {query}")
+    response = agent_executor.invoke(input={"input": query})
+    logging.info(f"Response: {response}")
