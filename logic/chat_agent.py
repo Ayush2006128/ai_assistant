@@ -2,6 +2,7 @@ import os
 import dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools import TavilySearchResults
+from tools.random_joke import RandomJokeTool
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationSummaryMemory
@@ -52,7 +53,9 @@ try:
     search_tool = TavilySearchResults(
         max_results=3, # Limit search results to 3
     )
-    tools = [search_tool]
+    # Use the async version of RandomJokeTool
+    joke_tool = RandomJokeTool()
+    tools = [search_tool, joke_tool] # List of tools to be used by the agent
     logging.info("Initialized TavilySearchResults tool.")
 except Exception as e:
     logging.error(f"Failed to initialize TavilySearchResults: {e}")
