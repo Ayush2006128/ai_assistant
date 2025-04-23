@@ -1,10 +1,11 @@
+# TODO: Fix the memory issue
 import os
 import dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools import TavilySearchResults
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationSummaryMemory
 import logging
 
 dotenv.load_dotenv(".env")
@@ -64,7 +65,10 @@ agent = create_react_agent(
     prompt=prompt
 )
 
-memory = ConversationBufferMemory(memory_key="chat_history")
+memory = ConversationSummaryMemory(
+    llm=llm,
+    memory_key="chat_history"
+)
 
 agent_executor = AgentExecutor(
     agent=agent,
