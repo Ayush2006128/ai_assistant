@@ -53,15 +53,13 @@ try:
     search_tool = TavilySearchResults(
         max_results=3, # Limit search results to 3
     )
-    # Use the async version of RandomJokeTool
-    joke_tool = RandomJokeTool()
-    tools = [search_tool, joke_tool] # List of tools to be used by the agent
-    logging.info("Initialized TavilySearchResults tool.")
+    tools = [search_tool]
+    logging.info("Initialized TavilySearchResults and RandomJokeTool tool.")
 except Exception as e:
-    logging.error(f"Failed to initialize TavilySearchResults: {e}")
+    logging.error(f"Failed to initialize tools: {e}")
     # Decide if you want to exit or continue without the tool
     tools = []
-    logging.warning("Continuing without search tool due to initialization error.")
+    logging.warning("Continuing without tools due to initialization error.")
 
 
 # --- Memory Initialization ---

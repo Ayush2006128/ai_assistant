@@ -4,11 +4,8 @@ import asyncio
 
 class RandomJokeTool(BaseTool):
     name: str = "random_joke"
-    description: str = "Get a random joke. Use this tool when you need a laugh or want to lighten the mood."
-    
-    def _run(self, input: str) -> str:
-        # Fetch a random joke
-        raise NotImplementedError("This method should be overridden in subclasses.")
+    description: str = "Get a random joke. Use this tool when you need a laugh or want to lighten the mood. NOTE: only use this tool with async run method 'arun()'."
+    args_schema: str = "No arguments required."
     
     async def _arun(self, input: str) -> str:
         # Asynchronous version of the run method
