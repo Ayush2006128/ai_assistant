@@ -5,7 +5,14 @@ import asyncio
 class RandomJokeTool(BaseTool):
     name: str = "random_joke"
     description: str = "Get a random joke. Use this tool when you need a laugh or want to lighten the mood. NOTE: only use this tool with async run method 'arun()'."
-    args_schema: str = "No arguments required."
+    args_schema: None = None
+    
+    def __init__(self):
+        super().__init__()
+
+    def _run(self, input: str) -> str:
+        super()._run(input)
+        raise NotImplementedError("This tool only supports async execution. Use 'arun()' method instead.")
     
     async def _arun(self, input: str) -> str:
         # Asynchronous version of the run method
@@ -17,10 +24,15 @@ class RandomJokeTool(BaseTool):
             joke_text = f"{joke['setup']} {joke['delivery']}"
         return joke_text
 
+    async def run(self, input: str) -> str:
+        # Public async method to match LangChain's async tool interface
+        return await self._arun(input)
+
 # Example usage
 async def main():
     joke_tool = RandomJokeTool()
-    joke = await joke_tool.arun("")
+    joke = await joke_tool.run("")
     print(f"Random Joke: {joke}")
+
 if __name__ == "__main__":
     asyncio.run(main())

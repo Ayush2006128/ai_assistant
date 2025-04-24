@@ -53,7 +53,8 @@ try:
     search_tool = TavilySearchResults(
         max_results=3, # Limit search results to 3
     )
-    tools = [search_tool]
+    joke_tool = RandomJokeTool() # Initialize the random joke tool
+    tools = [search_tool, joke_tool] # Combine tools into a list
     logging.info("Initialized TavilySearchResults and RandomJokeTool tool.")
 except Exception as e:
     logging.error(f"Failed to initialize tools: {e}")
@@ -128,7 +129,7 @@ agent_executor = AgentExecutor(
     agent=agent,
     tools=tools,
     memory=memory,              # Pass the initialized memory here
-    verbose=True,               # Print detailed execution steps
+    # verbose=True,               # Print detailed execution steps
     max_iterations=5,           # Increase max iterations slightly
     handle_parsing_errors=True, # Attempt to recover from LLM output parsing errors
     # return_intermediate_steps=True # Uncomment to see detailed thought process
