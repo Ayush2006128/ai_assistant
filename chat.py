@@ -2,6 +2,9 @@ import streamlit as st
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from logic.chat_agent import agent_executor
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 st.title("🤖 AI Assistant")
 
@@ -29,7 +32,7 @@ def get_agent_response(prompt):
             response = future.result()
         return response.get('output', 'Sorry, I could not find an answer.')
     except Exception as e:
-        print(f"Error in get_agent_response: {e}")
+        logging.info(f"Error in get_agent_response: {e}")
         return f"An error occurred: {e}"
 
 if prompt := st.chat_input("What's up?"):

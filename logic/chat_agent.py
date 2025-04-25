@@ -1,10 +1,10 @@
 import os
 import dotenv
-import asyncio # Import asyncio for running async code
+import asyncio
 import logging
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools import TavilySearchResults
-from tools.random_joke import AsyncJokeTool  # Import the async joke tool
+from tools.random_joke import AsyncJokeTool
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationSummaryMemory
@@ -112,10 +112,10 @@ agent_executor = AgentExecutor(
     agent=agent,
     tools=tools,
     memory=memory,
-    # verbose=True,
+    verbose=True,
     max_iterations=5,
     handle_parsing_errors=True,
-    # return_intermediate_steps=True
+    return_intermediate_steps=True
 )
 logging.info("Created AgentExecutor.")
 
