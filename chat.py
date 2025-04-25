@@ -1,35 +1,45 @@
 import streamlit as st
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 from logic.chat_agent import agent_executor
 
 st.title("🤖 AI Assistant")
 
-# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-async def get_agent_response(prompt):
+def get_agent_response(prompt):
+    """Calls the agent executor's ainvoke in a separate thread and returns the response."""
+    def run_async():
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            response = loop.run_until_complete(agent_executor.ainvoke({"input": prompt}))
+            return response
+        finally:
+            loop.close()
+
     try:
-        response = await agent_executor.ainvoke({"input": prompt})
+        with ThreadPoolExecutor() as executor:
+            future = executor.submit(run_async)
+            response = future.result()
         return response.get('output', 'Sorry, I could not find an answer.')
     except Exception as e:
+        print(f"Error in get_agent_response: {e}")
         return f"An error occurred: {e}"
 
-# React to user input
 if prompt := st.chat_input("What's up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    with st.spinner("Thinking..."):
-        # Use Streamlit's experimental async support
-        final_answer = asyncio.run(get_agent_response(prompt))
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            final_answer = get_agent_response(prompt)
+            st.markdown(final_answer)
 
     st.session_state.messages.append({"role": "assistant", "content": final_answer})
-    with st.chat_message("assistant"):
-        st.markdown(final_answer)
