@@ -7,3 +7,4 @@ dotenv==0.9.9
 google-api-python-client==2.167.0
 google-auth-oauthlib==1.2.1
 google-auth-httplib2==0.2.0
+pyjokes==0.8.3

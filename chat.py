@@ -1,3 +1,4 @@
+import asyncio
 import streamlit as st
 from logic.chat_agent import agent_executor
 
