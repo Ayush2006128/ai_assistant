@@ -1,10 +1,9 @@
 import os
 import dotenv
-import asyncio
 import logging
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI, HarmCategory, HarmBlockThreshold
 from langchain_community.tools import TavilySearchResults
-from tools.random_joke import AsyncJokeTool
+from tools.random_joke import ProvideJoke
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationSummaryMemory
@@ -35,7 +34,10 @@ try:
         google_api_key=google_api_key,
         model=model_name,
         temperature=temperature,
-        convert_system_message_to_human=True
+        convert_system_message_to_human=True,
+        safety_settings={
+            HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+        }
     )
     logging.info(f"Initialized LLM: {model_name} with temperature {temperature}")
 except Exception as e:
@@ -48,9 +50,9 @@ try:
         max_results=3,
     )
     # Initialize the async joke tool
-    joke_tool = AsyncJokeTool()
+    joke_tool = ProvideJoke()
     tools = [search_tool, joke_tool]
-    logging.info("Initialized TavilySearchResults and AsyncJokeTool tool.")
+    logging.info("Initialized TavilySearchResults and ProvideJoke tool.")
 except Exception as e:
     logging.error(f"Failed to initialize tools: {e}")
     tools = []
@@ -120,7 +122,7 @@ agent_executor = AgentExecutor(
 logging.info("Created AgentExecutor.")
 
 # --- Main Execution Block (Async) ---
-async def main(): # Define main as an async function
+def main(): # Define main as an async function
     logging.info("Starting agent interaction loop.")
     print("Agent is ready. Type 'quit' to exit.")
 
@@ -134,7 +136,7 @@ async def main(): # Define main as an async function
             logging.info(f"User Query: {query}")
 
             # Invoke the agent executor asynchronously
-            response = await agent_executor.ainvoke({"input": query}) # Use ainvoke and await
+            response = agent_executor.invoke({"input": query}) # Use ainvoke and await
 
             output = response.get('output', 'No output found.')
             logging.info(f"Agent Response: {output}")
@@ -147,4 +149,4 @@ async def main(): # Define main as an async function
     logging.info("Agent interaction finished.")
 
 if __name__ == "__main__":
-    asyncio.run(main()) # Run the async main function
+    main()
