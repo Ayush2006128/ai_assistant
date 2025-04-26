@@ -123,6 +123,11 @@ logging.info("Created AgentExecutor.")
 
 # --- Main Execution Block (Async) ---
 def main(): # Define main as an async function
+    """
+    Runs the main interaction loop for the conversational AI agent.
+    
+    Prompts the user for input, processes queries through the agent executor, and displays responses until the user types 'quit' to exit. Handles and logs errors during agent execution.
+    """
     logging.info("Starting agent interaction loop.")
     print("Agent is ready. Type 'quit' to exit.")
 
