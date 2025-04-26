@@ -14,7 +14,19 @@ class ProvideJoke(BaseTool):
     args_schema: Type[JokeArgSchema] = JokeArgSchema
 
     def _run(self, language: Optional[str] = "en", category: Optional[str] = "neutral") -> str:
-        """Run the tool to get a joke."""
+        """
+        Fetches a random joke based on the specified language and category.
+        
+        If both language and category are provided, returns a joke matching those criteria.
+        If either is missing, returns a default joke. If joke retrieval fails, returns an error message.
+        
+        Args:
+            language: Optional language code for the joke (default: "en").
+            category: Optional joke category (default: "neutral").
+        
+        Returns:
+            A joke string or an error message if retrieval fails.
+        """
         if language and category:
             try:
                 return pyjokes.get_joke(language=language, category=category)
@@ -27,5 +39,10 @@ class ProvideJoke(BaseTool):
                 return f"Error fetching joke: {e}"
 
     async def _arun(self, language: Optional[str] = None, category: Optional[str] = None) -> str:
-        """Async run method for the tool."""
+        """
+        Asynchronously executes the tool, but always raises NotImplementedError.
+        
+        Raises:
+            NotImplementedError: Async execution is not supported for this tool.
+        """
         raise NotImplementedError("This tool does not support async execution.")
