@@ -1,0 +1,11 @@
+# .streamlit/config.toml
+
+[theme]
+# Inspired by Baymax's suit and general brightness
+primaryColor="#FF4B4B" # A vibrant red
+backgroundColor="#FFFFFF" # Clean white background
+# A light grey/blue inspired by the sky or clean tech interfaces
+secondaryBackgroundColor="#E0F2F7"
+# A dark grey for readability, similar to text in the movie's interfaces
+textColor="#31333F"
+font="sans serif" # A clean, modern font
